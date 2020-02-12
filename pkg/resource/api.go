@@ -22,12 +22,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	"github.com/crossplaneio/crossplane-runtime/apis/core/v1alpha1"
 	"github.com/crossplaneio/crossplane-runtime/pkg/meta"
 )
-
-const KeepDefaultAnnotationsKey = "resourcepacks.crossplane.io/keep-defaulting-annotations"
-const KeepDefaultAnnotationsTrueValue = "true"
 
 // NewOwnerReferenceAdder returns a new *OwnerReferenceAdder
 func NewOwnerReferenceAdder() OwnerReferenceAdder {
@@ -72,12 +68,6 @@ func NewDefaultingAnnotationRemover() DefaultingAnnotationRemover {
 type DefaultingAnnotationRemover struct{}
 
 func (lo DefaultingAnnotationRemover) Patch(cr ParentResource, list []ChildResource) ([]ChildResource, error) {
-	if cr.GetAnnotations()[KeepDefaultAnnotationsKey] == KeepDefaultAnnotationsTrueValue {
-		return list, nil
-	}
-	for _, o := range list {
-		meta.RemoveAnnotations(o, v1alpha1.AnnotationDefaultClassKey)
-	}
 	return list, nil
 }
 
